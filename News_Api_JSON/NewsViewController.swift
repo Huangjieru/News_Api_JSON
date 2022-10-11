@@ -7,6 +7,7 @@
 
 import UIKit
 import SafariServices
+import Kingfisher
 //加入UITableViewDelegate,UITableViewDataSource 協定
 class NewsViewController:UIViewController {
     
@@ -15,7 +16,10 @@ class NewsViewController:UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var newsArray:[Articles] = [Articles]()
-
+    
+    var searchNewsArray = [Articles]()
+    var searching = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         //表格代理
@@ -24,10 +28,11 @@ class NewsViewController:UIViewController {
         //搜尋代理
         searchBar.delegate = self
         searchBar.placeholder = "search news that you want."
-        
-        fetchNews()
 
+            fetchNews()
+    
     }
+    
     func fetchNews(){
         
         if let url = URL(string: "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f"){
@@ -66,39 +71,67 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return newsArray.count
+        if searching{
+            return searchNewsArray.count
+        }else{
+            return newsArray.count
+        }
+        
     }
     
     //資訊顯示於表格上
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(NewsTableViewCell.self)", for: indexPath) as! NewsTableViewCell
         
-        let news = newsArray[indexPath.row]
-        cell.titleLabel.text = news.title
-        cell.descriptionLabel.text = news.description
         
-        
-        //<方法一>清空圖片,才不會因為 cell 重覆利用而顯示舊的照片
-        //        cell.picImageView.image = nil
-        //<方法二>顯示預設圖片，才不會因為cell重複利用而顯示舊的照片
-        //        cell.picImageView.image = UIImage(systemName: "newspaper.fill")
-        
-        //要滑動後才會顯示圖片->解法：用自訂的 cell 樣式,不要用內建的 cell 樣式。給cell Id
-        //        cell.picImageView.kf.setImage(with: news.urlToImage, placeholder: UIImage(systemName: "newspaper.fill"))
-        
-        if let newsURL = news.urlToImage{
-            URLSession.shared.dataTask(with: newsURL) { data, respones, error in
-                if let data = data{
-                    let decoder = JSONDecoder()
-                    let news = try? decoder.decode(News.self, from: data)
-                    DispatchQueue.main.async {
-                        cell.picImageView.image = UIImage(data: data)
+        if searching{
+            let searchNews = searchNewsArray[indexPath.row]
+            cell.titleLabel.text = searchNews.title
+            print("searching:\(cell.titleLabel.text)")
+            cell.descriptionLabel.text = searchNews.description
+            if let newsImage = searchNews.urlToImage{
+                URLSession.shared.dataTask(with: newsImage) { data, response, error in
+                    if let data = data, let image = UIImage(data: data)
+                    {
                         
+                        DispatchQueue.main.async {
+                            cell.picImageView.image = image
+                            
+                        }
                     }
-                    
+                }.resume()
+            }
+            
+        }else{
+            
+                let news = newsArray[indexPath.row]
+                
+                cell.titleLabel.text = news.title
+                cell.descriptionLabel.text = news.description
+                
+                
+                //<方法一>清空圖片,才不會因為 cell 重覆利用而顯示舊的照片
+                //        cell.picImageView.image = nil
+                //<方法二>顯示預設圖片，才不會因為cell重複利用而顯示舊的照片
+                //        cell.picImageView.image = UIImage(systemName: "newspaper.fill")
+                
+                //要滑動後才會顯示圖片->解法：用自訂的 cell 樣式,不要用內建的 cell 樣式。給cell Id
+//                        cell.picImageView.kf.setImage(with: news.urlToImage, placeholder: UIImage(systemName: "newspaper.fill"))
+                
+                if let newsURL = news.urlToImage{
+                    URLSession.shared.dataTask(with: newsURL) { data, respones, error in
+                        if let data = data{
+                           
+                            DispatchQueue.main.async {
+                                cell.picImageView.image = UIImage(data: data)
+                                
+                            }
+                            
+                        }
+                    }.resume()
                 }
-            }.resume()
-        }
+        }//else
+        
         
         tableView.rowHeight = 180
         cell.titleLabel.font = UIFont.systemFont(ofSize: 25)
@@ -126,38 +159,41 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
 }
 extension NewsViewController: UISearchBarDelegate{
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        print("searchText:\(searchText)")
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-  
-//        searchNews()
+        searching = true
+        searchNews(text: searchBar.text ?? "")
         searchBar.resignFirstResponder()
         view.endEditing(true)
+    }
      
-    }
-   /*
-    func searchNews(){
-        
-        let urlString = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f"
-        if let url = URL(string: urlString){
-            let task = URLSession.shared.dataTask(with: url) {
-                data, response, error
-                in
-                if let data = data{
-                    let decoder = JSONDecoder()
-                    do{
-                        let article = try decoder.decode([Articles].self, from: data)
-                        self.searchNewsArray = article
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
-                    }catch{
-                        print(error)
-                    }
-                    
-                }
-            }
-            task.resume()
-        }
-  
-    }
-    */
+    func searchNews(text:String){
+         
+         let urlString = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f&q=\(text)"
+         if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!){
+             let task = URLSession.shared.dataTask(with: url) {
+                 data, response, error
+                 in
+                 if let data = data{
+                     let decoder = JSONDecoder()
+                     do{
+                         let news = try decoder.decode(News.self, from: data)
+                         self.searchNewsArray = news.articles
+                         DispatchQueue.main.async {
+                             self.tableView.reloadData()
+                         }
+                     }catch{
+                         print(error)
+                     }
+                     
+                 }
+             }
+             task.resume()
+         }
+     }
+   
 }

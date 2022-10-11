@@ -20,6 +20,6 @@ struct Articles:Decodable{
     let content:String?
 }
 
-class SearchNews{
-    static var shareNewsData = [Articles]()
-}
+//class SearchNews{
+//    static var shareNewsData = [Articles]()
+//}
