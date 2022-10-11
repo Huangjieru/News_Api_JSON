@@ -35,7 +35,7 @@ class NewsViewController:UIViewController {
     
     func fetchNews(){
         
-        if let url = URL(string: "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f"){
+        if let url = URL(string: "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!){
             URLSession.shared.dataTask(with: url) {
                 data, response, error
                 in
@@ -72,6 +72,7 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if searching{
+            print("數量:\(searchNewsArray.count)")
             return searchNewsArray.count
         }else{
             return newsArray.count
@@ -93,10 +94,10 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
                 URLSession.shared.dataTask(with: newsImage) { data, response, error in
                     if let data = data, let image = UIImage(data: data)
                     {
-                        
+
                         DispatchQueue.main.async {
                             cell.picImageView.image = image
-                            
+
                         }
                     }
                 }.resume()
@@ -149,9 +150,17 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
     //點選cell連線到新聞頁面
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let newsDetial = newsArray[indexPath.row].url{
-            let safariViewController = SFSafariViewController(url: newsDetial)
-            present(safariViewController, animated: true)
+        if searching{
+            if let searchNewsDetail = searchNewsArray[indexPath.row].url{
+                let safariViewController = SFSafariViewController(url: searchNewsDetail)
+                present(safariViewController, animated: true)
+            }
+        }else{
+            
+            if let newsDetial = newsArray[indexPath.row].url{
+                let safariViewController = SFSafariViewController(url: newsDetial)
+                present(safariViewController, animated: true)
+            }
         }
         
     }
@@ -160,14 +169,15 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
 extension NewsViewController: UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
+        
+        searching = true
         print("searchText:\(searchText)")
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
         searching = true
         searchNews(text: searchBar.text ?? "")
-        searchBar.resignFirstResponder()
         view.endEditing(true)
     }
      
