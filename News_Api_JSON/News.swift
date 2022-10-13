@@ -10,7 +10,7 @@ import Foundation
 struct News:Decodable{
     let articles:[Articles]
 }
-//印出錯誤訊息加上Optional的?
+//印出錯誤訊息加上Optional的"?"
 struct Articles:Decodable{
     let title:String?
     let description:String?
@@ -19,7 +19,3 @@ struct Articles:Decodable{
     let publishedAt:String?
     let content:String?
 }
-
-//class SearchNews{
-//    static var shareNewsData = [Articles]()
-//}

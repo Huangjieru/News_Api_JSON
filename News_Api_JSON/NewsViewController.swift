@@ -35,7 +35,7 @@ class NewsViewController:UIViewController {
     
     func fetchNews(){
         
-        if let url = URL(string: "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!){
+        if let url = URL(string: "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f"){
             URLSession.shared.dataTask(with: url) {
                 data, response, error
                 in
@@ -88,8 +88,10 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
         if searching{
             let searchNews = searchNewsArray[indexPath.row]
             cell.titleLabel.text = searchNews.title
-            print("searching:\(cell.titleLabel.text)")
+            print("searching_title:\(cell.titleLabel.text)")
             cell.descriptionLabel.text = searchNews.description
+            print("searching_desc:\(cell.descriptionLabel.text)")
+            
             if let newsImage = searchNews.urlToImage{
                 URLSession.shared.dataTask(with: newsImage) { data, response, error in
                     if let data = data, let image = UIImage(data: data)
@@ -168,12 +170,6 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
 }
 extension NewsViewController: UISearchBarDelegate{
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        searching = true
-        print("searchText:\(searchText)")
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         searching = true
@@ -182,8 +178,8 @@ extension NewsViewController: UISearchBarDelegate{
     }
      
     func searchNews(text:String){
-         
-         let urlString = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f&q=\(text)"
+         //searchin?=title=\()
+        let urlString = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f&searchIn=title&q=\(text)"
          if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!){
              let task = URLSession.shared.dataTask(with: url) {
                  data, response, error
