@@ -22,6 +22,9 @@ class NewsViewController:UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "News"
+        
         //表格代理
         tableView.delegate = self
         tableView.dataSource = self
@@ -178,7 +181,7 @@ extension NewsViewController: UISearchBarDelegate{
     }
      
     func searchNews(text:String){
-         //searchin?=title=\()
+
         let urlString = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f&searchIn=title&q=\(text)"
          if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!){
              let task = URLSession.shared.dataTask(with: url) {

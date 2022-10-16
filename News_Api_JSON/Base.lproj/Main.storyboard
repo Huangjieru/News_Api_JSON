@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ubh-Vv-TaQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7vM-l9-n59">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="jvc-Lc-tNd">
-                                <rect key="frame" x="20" y="57" width="350" height="56"/>
+                                <rect key="frame" x="20" y="101" width="350" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="S6n-hL-TA7">
-                                <rect key="frame" x="20" y="113" width="350" height="697"/>
+                                <rect key="frame" x="20" y="157" width="350" height="653"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsTableViewCell" rowHeight="230" id="wzo-yv-b6u" customClass="NewsTableViewCell" customModule="News_Api_JSON" customModuleProvider="target">
@@ -86,12 +86,34 @@
                             <constraint firstItem="S6n-hL-TA7" firstAttribute="top" secondItem="jvc-Lc-tNd" secondAttribute="bottom" id="gXO-j1-S0y"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="yx9-FP-tjb"/>
                     <connections>
                         <outlet property="searchBar" destination="jvc-Lc-tNd" id="y84-dg-Hjq"/>
                         <outlet property="tableView" destination="S6n-hL-TA7" id="X43-OL-cry"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xbJ-a8-8dy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1687.6923076923076" y="71.800947867298575"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Jcy-BW-mOT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7vM-l9-n59" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9ET-rE-Yfb">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="27"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="ubh-Vv-TaQ" kind="relationship" relationship="rootViewController" id="U5Q-zR-KfE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8yL-72-VAE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="758.46153846153845" y="71.800947867298575"/>
         </scene>
