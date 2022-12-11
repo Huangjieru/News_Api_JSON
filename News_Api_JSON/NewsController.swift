@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class NewsController{
+    
+    static let shared = NewsController()
     //產生 NSCache 物件。以key找對應的value。<>裡傳入key, value。key的型別是NSURL, value的型別是UIImage。
     let imageCache = NSCache<NSURL, UIImage>()
     //NSCache 要求它的 key & value 的型別都必須是物件，因此只能傳入 class 定義的型別，而 URL 是 struct。

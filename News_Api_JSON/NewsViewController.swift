@@ -22,16 +22,17 @@ class NewsViewController:UIViewController {
     //存入抓取到的API資料
     var newsArray:[Articles] = [Articles]()
     //加入searchbar
-//    var searchController:UISearchController!
+    //    var searchController:UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "News"
-        //loading資料
-//        activityIndicator.alpha = 1
-        activityIndicator.startAnimating()
+        tableView.rowHeight = 180
         
+        //loading資料
+        //activityIndicator.alpha = 1
+        activityIndicator.startAnimating()
         //表格代理
         tableView.delegate = self
         tableView.dataSource = self
@@ -41,12 +42,13 @@ class NewsViewController:UIViewController {
         searchBar.showsCancelButton = true //顯示“取消”按鈕
         //抓資料
         fetchNews()
+        //更新
         refreshControl()
         
         //在navigation加入searchbar(也有cancel的按鈕)
-//        searchController = UISearchController(searchResultsController: nil)
-//        navigationItem.searchController = searchController
-    
+        //        searchController = UISearchController(searchResultsController: nil)
+        //        navigationItem.searchController = searchController
+        
     }
     //抓新聞資料
     private func fetchNews(){
@@ -73,38 +75,9 @@ class NewsViewController:UIViewController {
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
     }
-    //將要呈現在tableView cell裡的資料另外寫成function
-    func configure(cell:NewsTableViewCell,forItemAt indexPath: IndexPath){
-        
-        let news = newsArray[indexPath.row]
-        cell.titleLabel.text = news.title
-        cell.descriptionLabel.text = news.description
-        cell.picImageView.image = UIImage(systemName: "newspaper.fill")
-        if let newsImage = news.urlToImage {
-            newsController.fetchImage(from: newsImage) { imagePic in
-                if let image = imagePic{
-                    DispatchQueue.main.async {
-                        cell.picImageView.image = image
-                    }
-                }
-            }
-        }
-        
-        
-        tableView.rowHeight = 180
-        cell.titleLabel.font = UIFont.systemFont(ofSize: 25)
-        cell.titleLabel.numberOfLines = 2
-        
-        cell.descriptionLabel.numberOfLines = 0
-        
-        cell.picImageView.layer.cornerRadius = 15
-        cell.picImageView.contentMode = .scaleAspectFill
-        
-    }
+    
     
 }
-
-
 // MARK: - Table view data source
 extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
     
@@ -124,8 +97,9 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.reuseIdentifier, for: indexPath) as! NewsTableViewCell
        //呼叫configure function呈現資料
-       configure(cell: cell, forItemAt: indexPath)
-        
+        let news = newsArray[indexPath.row]
+        cell.configure(with: news)
+
         return cell
         
     }

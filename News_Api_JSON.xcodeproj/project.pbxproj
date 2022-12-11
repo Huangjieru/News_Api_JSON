@@ -103,11 +103,11 @@
 				2BF7F5CB28E9E2DB00856113 /* SceneDelegate.swift */,
 				2BF7F5CF28E9E2DB00856113 /* Main.storyboard */,
 				2BF7F5F928E9E32000856113 /* News.swift */,
+				2BF7A2E329057F3A00717A27 /* NewsController.swift */,
 				2BE5C9C928EEF8800059E982 /* NewsViewController.swift */,
 				2BF7F5FF28E9E5DE00856113 /* NewsTableViewCell.swift */,
 				2B7E013028FD8F2F00A69CE0 /* TableViewController+Extension.swift */,
 				2BF7F5D228E9E2E000856113 /* Assets.xcassets */,
-				2BF7A2E329057F3A00717A27 /* NewsController.swift */,
 				2BF7F5D428E9E2E000856113 /* LaunchScreen.storyboard */,
 				2BF7F5D728E9E2E000856113 /* Info.plist */,
 			);
