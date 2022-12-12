@@ -17,8 +17,8 @@ class NewsViewController:UIViewController {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    //宣告變數建立NewsController物件
-    var newsController = NewsController()
+    //宣告變數建立NewsController物件-->改成用Singleton方式撰寫：NewsController.shared
+//    var newsController = NewsController()
     //存入抓取到的API資料
     var newsArray:[Articles] = [Articles]()
     //加入searchbar
@@ -52,7 +52,7 @@ class NewsViewController:UIViewController {
     }
     //抓新聞資料
     private func fetchNews(){
-        newsController.fetchItems { news in
+        NewsController.shared.fetchItems { news in
             if let news{
                 DispatchQueue.main.async {
                     self.newsArray = news
@@ -61,6 +61,15 @@ class NewsViewController:UIViewController {
                     self.activityIndicator.stopAnimating()
                     self.activityIndicator.alpha = 0
                 }
+                /*
+                //測試singleton
+                DispatchQueue.global().async {
+                    NewsController.shared.loadDatas()
+                }
+                DispatchQueue.global().async {
+                    NewsController.shared.loadDatas()
+                }
+                */
             }
         }
     }
@@ -98,6 +107,9 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.reuseIdentifier, for: indexPath) as! NewsTableViewCell
        //呼叫configure function呈現資料
         let news = newsArray[indexPath.row]
+//        print(newsArray.count)
+//        print(news.title)
+        
         cell.configure(with: news)
 
         return cell
@@ -107,7 +119,8 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
     //點選cell連線到新聞頁面
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let newsDetail = newsArray[indexPath.row].url{
+        if let newsDetail = newsArray[indexPath.row].link{
+//            print(newsDetail)
             let safariViewController = SFSafariViewController(url: newsDetail)
             present(safariViewController, animated: true)
            
@@ -119,7 +132,7 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
 extension NewsViewController: UISearchBarDelegate{
     
     func fetchSearchNews(){
-        newsController.fetchSearchNews(text: searchBar.text ?? "") { news in
+        NewsController.shared.fetchSearchNews(text: searchBar.text ?? "") { news in
             if let news{
                 DispatchQueue.main.async {
                     self.newsArray = news

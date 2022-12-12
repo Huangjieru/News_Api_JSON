@@ -19,7 +19,7 @@ class NewsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var content: UILabel!
     
-    var articles:Articles!
+    private var articles:Articles!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -40,10 +40,10 @@ class NewsTableViewCell: UITableViewCell {
         descriptionLabel.text = articles.description
         picImageView.image = UIImage(systemName: "newspaper.fill")
         if let newsImage = articles.urlToImage {
-            NewsController.shared.fetchImage(from: newsImage) { imagePic in
+            NewsController.shared.fetchImage(from: newsImage) { [weak self] (imagePic) in
                 if let image = imagePic{
                     DispatchQueue.main.async {
-                        self.picImageView.image = image
+                        self?.picImageView.image = image
                     }
                 }
             }

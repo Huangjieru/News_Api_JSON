@@ -10,15 +10,25 @@ import UIKit
 
 class NewsController{
     
-    static let shared = NewsController()
+    static let shared = NewsController() //singleton
     //產生 NSCache 物件。以key找對應的value。<>裡傳入key, value。key的型別是NSURL, value的型別是UIImage。
     let imageCache = NSCache<NSURL, UIImage>()
     //NSCache 要求它的 key & value 的型別都必須是物件，因此只能傳入 class 定義的型別，而 URL 是 struct。
     //NSCache 比較不會造成記憶體的問題，因為當系統記憶體不夠時，它會自動將東西從 cache 裡移除
+   
+    private init(){
+        print("init")
+    } //singleton
+    /*
+    //測試singleton
+    func loadDatas(){
+        print("loadDatas")
+    }*/
     
     //畫面出現時呈現的新聞
     func fetchItems(completion:@escaping ([Articles]?)->Void){
-        guard let urlString = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) else {
+        let urlString = "https://newsapi.org/v2/top-headlines?country=us&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f"
+        guard let url = URL(string: urlString) else {
             completion(nil)
             return}
         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -58,7 +68,8 @@ class NewsController{
     }
     //搜尋新聞的API
     func fetchSearchNews(text:String, completion:@escaping ([Articles]?)->Void){
-        guard let urlString = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f&searchIn=title&q=\(text)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString)  else { return}
+        let urlString = "https://newsapi.org/v2/everything?apiKey=60ee7c4a0986431ba48c8d9f5a9efa4f&searchIn=title&q=\(text)"
+        guard let url = URL(string: urlString)  else { return}
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data{
                 do{
@@ -71,6 +82,5 @@ class NewsController{
             }
         }.resume()
     }
-    
     
 }
