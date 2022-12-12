@@ -7,7 +7,7 @@
 
 import UIKit
 import SafariServices
-import Kingfisher
+
 //加入UITableViewDelegate,UITableViewDataSource 協定
 class NewsViewController:UIViewController {
     
@@ -111,7 +111,13 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
 //        print(news.title)
         
         cell.configure(with: news)
-
+       
+        //淡入動畫
+        UIView.animate(withDuration: 0.7, delay: 0, options: .curveEaseIn) {
+            cell.titleLabel.alpha = 1
+            cell.descriptionLabel.alpha = 1
+        }
+        
         return cell
         
     }
@@ -141,7 +147,7 @@ extension NewsViewController: UISearchBarDelegate{
             }
         }
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
         self.newsArray = []
