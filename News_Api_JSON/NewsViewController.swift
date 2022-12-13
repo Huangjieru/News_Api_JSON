@@ -52,7 +52,8 @@ class NewsViewController:UIViewController {
     }
     //抓新聞資料
     private func fetchNews(){
-        NewsController.shared.fetchItems { news in
+        NewsController.shared.fetchItems { [weak self] news in
+            guard let self = self else {return}
             if let news{
                 DispatchQueue.main.async {
                     self.newsArray = news
@@ -138,7 +139,8 @@ extension NewsViewController: UITableViewDelegate, UITableViewDataSource{
 extension NewsViewController: UISearchBarDelegate{
     
     func fetchSearchNews(){
-        NewsController.shared.fetchSearchNews(text: searchBar.text ?? "") { news in
+        NewsController.shared.fetchSearchNews(text: searchBar.text ?? "") { [weak self] news in
+            guard let self = self else {return}
             if let news{
                 DispatchQueue.main.async {
                     self.newsArray = news

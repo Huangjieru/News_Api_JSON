@@ -40,12 +40,13 @@ class NewsTableViewCell: UITableViewCell {
         picImageView.image = UIImage(systemName: "newspaper.fill")
         if let newsImage = articles.urlToImage {
             NewsController.shared.fetchImage(from: newsImage) { [weak self] (imagePic) in
+                guard let self = self else {return}
                 if let image = imagePic{
                     DispatchQueue.main.async {
-                        self?.picImageView.image = image
+                        self.picImageView.image = image
                         //淡入動畫
                         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn) {
-                            self?.picImageView.alpha = 1
+                            self.picImageView.alpha = 1
                         }
                     }
                 }
